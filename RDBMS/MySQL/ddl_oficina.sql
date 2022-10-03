@@ -70,7 +70,7 @@ idEquipe TINYINT UNSIGNED NOT NULL,
 idPedido MEDIUMINT UNSIGNED NOT NULL,
 dataEntrega DATE NOT NULL,
 dataEmissao DATE NOT NULL,
-valor FLOAT NOT NULL,
+valor FLOAT NOT NULL DEFAULT 0,
 FOREIGN KEY (idEquipe) REFERENCES equipe(id) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (idPedido) REFERENCES pedido(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -98,5 +98,64 @@ CONSTRAINT ch_valor CHECK (valor>=0)
 );
 
 -- ALTER TABLE servico ADD CONSTRAINT ck_valor CHECK (valor>0);
+
+CREATE VIEW vw_carro_cliente AS
+(
+SELECT placa, modelo, marca, ano, nome
+FROM veiculo
+INNER JOIN cliente ON cliente.cpf = veiculo.cpfCliente
+);
+
+-- DROP VIEW carro_cliente;
+
+CREATE INDEX servico_nome ON servico (nome);
+
+-- ALTER TABLE servico DROP INDEX servico_nome;
+
+DELIMITER $$
+CREATE PROCEDURE count_veiculo_cpf (IN cpf CHAR(11), OUT qtd INT)
+BEGIN
+	SELECT COUNT(*) INTO qtd
+	FROM veiculo
+	WHERE cpfCliente = cpf;
+END $$
+DELIMITER ;
+
+-- DROP PROCEDURE count_veiculo_cpf;
+
+DELIMITER //
+CREATE FUNCTION desconto (o_s TINYINT, d FLOAT)
+RETURNS FLOAT
+DETERMINISTIC
+BEGIN
+	DECLARE valor_final FLOAT;
+	SELECT valor*(1-d) INTO valor_final 
+    FROM ordemDeServico
+    WHERE id = o_s;
+    RETURN valor_final;
+END //
+DELIMITER ;
+
+-- DROP FUNCTION desconto;
+
+DELIMITER //
+CREATE TRIGGER ins_ordemDeServico AFTER INSERT ON servico_ordemDeServico
+FOR EACH ROW
+BEGIN
+	UPDATE ordemDeServico SET ordemDeServico.valor = ordemDeServico.valor + (NEW.valor * NEW.quantidade)
+    WHERE ordemDeServico.id = NEW.idOrdemDeServico;
+END //
+DELIMITER ;
+
+-- DROP TRIGGER ins_ordemServico;
+
+CREATE USER 'dono'@'localhost' IDENTIFIED BY 'dono';
+CREATE USER 'gerente'@'localhost' IDENTIFIED BY 'gerente';
+CREATE USER 'mecanico'@'localhost' IDENTIFIED BY 'mecanico';
+CREATE USER 'responsavel_equipe'@'localhost' IDENTIFIED BY 'responsavel_equipe';
+
+CREATE ROLE role_ins_del_upt_sel;
+
+-- DROP USER 'responsavel_equipe'@'localhost';
 
 -- DROP DATABASE oficina;

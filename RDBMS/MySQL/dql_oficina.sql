@@ -27,3 +27,13 @@ SELECT c.nome cliente, e.responsavel
 FROM cliente c
 JOIN pedido p ON p.cpfCliente = c.cpf
 JOIN equipe e ON p.idEquipe = e.id;
+
+-- select da view
+SELECT * FROM vw_carro_cliente;
+
+-- call procedure
+CALL count_veiculo_cpf('00000000002', @qtd);
+SELECT @qtd AS quantidade;
+
+-- call function
+SELECT desconto(1,0.2);
