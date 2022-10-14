@@ -39,7 +39,7 @@ ALTER TABLE mecanico ADD PRIMARY KEY (cpf);
 
 CREATE TABLE IF NOT EXISTS equipe(
 id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-responsavel CHAR(11) NOT NULL
+responsavel VARCHAR(45) NOT NULL
 );
 
 -- ALTER TABLE equipe ADD CONSTRAINT pk_equipe PRIMARY KEY (id);
@@ -47,7 +47,7 @@ ALTER TABLE equipe ADD CONSTRAINT fk_equipe FOREIGN KEY (responsavel) REFERENCES
 
 CREATE TABLE IF NOT EXISTS equipe_mecanico(
 idEquipe TINYINT UNSIGNED,
-mecanico CHAR(11),
+mecanico VARCHAR(45),
 PRIMARY KEY (idEquipe, mecanico),
 FOREIGN KEY (idEquipe) REFERENCES equipe(id) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (mecanico) REFERENCES mecanico(nome) ON DELETE CASCADE ON UPDATE CASCADE
@@ -106,7 +106,7 @@ FROM veiculo
 INNER JOIN cliente ON cliente.cpf = veiculo.cpfCliente
 );
 
--- DROP VIEW carro_cliente;
+-- DROP VIEW vw_carro_cliente;
 
 CREATE INDEX servico_nome ON servico (nome);
 

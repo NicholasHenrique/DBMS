@@ -17,10 +17,10 @@ FROM servico_ordemDeServico
 ORDER BY autorizado DESC;
 
 -- Condições de filtros aos grupos – HAVING Statement
-SELECT *
+SELECT idServico, SUM(valor)
 FROM servico_ordemDeServico
 GROUP BY idServico 
-HAVING valor >= 200;
+HAVING SUM(valor) >= 200;
 
 -- Crie junções entre tabelas para fornecer uma perspectiva mais complexa dos dados
 SELECT c.nome cliente, e.responsavel

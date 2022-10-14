@@ -29,11 +29,11 @@ INSERT INTO mecanico (cpf, nome, genero, dataNascimento, endereco, especialidade
     ('00000000015', 'Fred', 'M', '1981-01-03', 'Rua Marte', 'Interior'),
     ('00000000016', 'Gustavo', 'M', '1999-10-09', 'Rua Muralha', 'Lataria');
     
-INSERT INTO equipe (id, responsavel) VALUES
-	(1, 'Marcia'),
-    (2, 'Pedro'),
-    (3, 'Fred'),
-    (4, 'Gustavo');
+INSERT INTO equipe (responsavel) VALUES
+	('Marcia'),
+    ('Pedro'),
+    ('Fred'),
+    ('Gustavo');
 
 INSERT INTO equipe_mecanico (idEquipe, mecanico) VALUES
 	(1, 'Marcia'),
